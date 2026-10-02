@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   collection,
   addDoc,
@@ -14,14 +14,20 @@ import { useAuth } from "@/components/AuthProvider";
 import type { Student } from "@/lib/types";
 import { toInputValue } from "@/lib/utils";
 
-export default function YeniDersPage() {
+function YeniDersForm() {
   const { user } = useAuth();
   const router = useRouter();
+  const params = useSearchParams();
+  const tarihParam = params.get("tarih");
   const [students, setStudents] = useState<Student[]>([]);
   const [studentId, setStudentId] = useState("");
-  const [dateStr, setDateStr] = useState(() =>
-    toInputValue(Date.now() + 60 * 60 * 1000)
-  );
+  const [dateStr, setDateStr] = useState(() => {
+    if (tarihParam) {
+      const t = Number(tarihParam);
+      if (!isNaN(t) && t > 0) return toInputValue(t);
+    }
+    return toInputValue(Date.now() + 60 * 60 * 1000);
+  });
   const [duration, setDuration] = useState("60");
   const [fee, setFee] = useState("750");
   const [repeat, setRepeat] = useState("0");
@@ -199,5 +205,13 @@ export default function YeniDersPage() {
         </p>
       )}
     </form>
+  );
+}
+
+export default function YeniDersPage() {
+  return (
+    <Suspense>
+      <YeniDersForm />
+    </Suspense>
   );
 }

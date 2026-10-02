@@ -80,3 +80,54 @@ export function endOfWeek() {
   d.setHours(23, 59, 59, 999);
   return d.getTime();
 }
+
+const TR_AYLAR = [
+  "Ocak",
+  "Şubat",
+  "Mart",
+  "Nisan",
+  "Mayıs",
+  "Haziran",
+  "Temmuz",
+  "Ağustos",
+  "Eylül",
+  "Ekim",
+  "Kasım",
+  "Aralık",
+];
+
+export function ayEtiketi(yil: number, ay: number) {
+  return `${TR_AYLAR[ay]} ${yil}`;
+}
+
+export function ayniGun(a: number, b: number) {
+  const x = new Date(a);
+  const y = new Date(b);
+  return (
+    x.getFullYear() === y.getFullYear() &&
+    x.getMonth() === y.getMonth() &&
+    x.getDate() === y.getDate()
+  );
+}
+
+export function gunBaslangici(gun: number) {
+  const d = new Date(gun);
+  d.setHours(0, 0, 0, 0);
+  return d.getTime();
+}
+
+export function gunBitisi(gun: number) {
+  const d = new Date(gun);
+  d.setHours(23, 59, 59, 999);
+  return d.getTime();
+}
+
+export function aydanSonra(ts: number) {
+  const d = new Date(ts);
+  return new Date(d.getFullYear(), d.getMonth() + 1, 1).getTime();
+}
+
+export function aydanOnce(ts: number) {
+  const d = new Date(ts);
+  return new Date(d.getFullYear(), d.getMonth() - 1, 1).getTime();
+}
