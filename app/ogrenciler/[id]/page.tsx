@@ -216,8 +216,22 @@ export default function OgrenciDetayPage() {
                         • {l.paid ? "ödendi" : "ÖDENMEDİ"}
                       </span>
                     )}
+                    {l.status === "cancelled" && (
+                      <span className="text-stone-400">• iptal</span>
+                    )}
                   </p>
                 </div>
+                {l.status === "planned" && (
+                  <button
+                    onClick={() =>
+                      updateDoc(doc(db, "lessons", l.id), { status: "done" })
+                    }
+                    className="shrink-0 rounded-lg bg-red-600 px-3 py-2 text-xs font-bold text-white"
+                    title="Dersi borç bakiyesine ekler"
+                  >
+                    💸 Borca Ekle
+                  </button>
+                )}
                 {l.status === "done" && (
                   <button
                     onClick={() =>
@@ -230,6 +244,17 @@ export default function OgrenciDetayPage() {
                     }`}
                   >
                     {l.paid ? "Ödenmedi" : "💰 Ödendi"}
+                  </button>
+                )}
+                {l.status === "done" && !l.paid && (
+                  <button
+                    onClick={() =>
+                      updateDoc(doc(db, "lessons", l.id), { status: "cancelled" })
+                    }
+                    className="shrink-0 rounded-lg bg-stone-100 px-2 py-2 text-xs text-stone-500"
+                    title="Borçtan düş"
+                  >
+                    ✕
                   </button>
                 )}
               </li>
