@@ -185,7 +185,7 @@ function DerslerIcerik() {
                     </a>
                   )}
                 </div>
-                <div className="mt-2.5 flex gap-1.5">
+                <div className="mt-2.5 flex flex-wrap gap-1.5">
                   <button
                     onClick={() =>
                       updateDoc(doc(db, "lessons", l.id), { paid: !l.paid })
@@ -215,18 +215,18 @@ function DerslerIcerik() {
                           status: "cancelled",
                         })
                       }
-                      className="rounded-lg bg-stone-100 px-3 py-2 text-xs text-stone-500"
+                      className="rounded-lg bg-stone-100 px-3 py-2 text-xs font-bold text-stone-500"
                     >
-                      İptal
+                      İptal Et
                     </button>
                   )}
                   {l.groupId && (
                     <button
                       onClick={() => cancelGroup(l)}
-                      className="rounded-lg bg-stone-100 px-3 py-2 text-xs text-stone-500"
+                      className="rounded-lg bg-stone-100 px-3 py-2 text-xs font-bold text-stone-500"
                       title="Tekrarlı programın tamamını iptal et"
                     >
-                      ⏹ Tümü
+                      Tümünü İptal Et
                     </button>
                   )}
                 </div>

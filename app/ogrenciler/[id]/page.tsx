@@ -267,10 +267,10 @@ export default function OgrenciDetayPage() {
                     onClick={() =>
                       updateDoc(doc(db, "lessons", l.id), { status: "cancelled" })
                     }
-                    className="shrink-0 rounded-lg bg-stone-100 px-2 py-2 text-xs text-stone-500"
+                    className="shrink-0 rounded-lg bg-stone-100 px-3 py-2 text-xs font-bold text-stone-500"
                     title="Borçtan düş"
                   >
-                    ✕
+                    Borçtan Düş
                   </button>
                 )}
               </li>
