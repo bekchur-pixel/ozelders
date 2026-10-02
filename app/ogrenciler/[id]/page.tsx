@@ -142,6 +142,26 @@ export default function OgrenciDetayPage() {
           <p className="mt-1 text-[11px] text-stone-500">
             {doneLessons.filter((l) => !l.paid).length} ders ödenmedi
           </p>
+          {debt > 0 && (
+            (() => {
+              const borcWa = whatsappLink(
+                student.phone,
+                `Merhaba ${student.parentName || ""}, ${student.name} için ${tl(
+                  debt
+                )} tutarında piyano ders ücreti borcu kaldı. Kolayca ödeyebilirsiniz, teşekkürler 🎹`
+              );
+              if (!borcWa) return null;
+              return (
+                <a
+                  href={borcWa}
+                  target="_blank"
+                  className="mt-2 flex items-center justify-center gap-1.5 rounded-xl bg-green-500 py-2.5 text-sm font-bold text-white"
+                >
+                  💬 Borcu WhatsApp ile Hatırlat
+                </a>
+              );
+            })()
+          )}
         </div>
       </div>
 
