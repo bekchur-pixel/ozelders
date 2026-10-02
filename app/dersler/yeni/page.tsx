@@ -19,6 +19,7 @@ function YeniDersForm() {
   const router = useRouter();
   const params = useSearchParams();
   const tarihParam = params.get("tarih");
+  const ogrenciParam = params.get("ogrenci");
   const [students, setStudents] = useState<Student[]>([]);
   const [studentId, setStudentId] = useState("");
   const [dateStr, setDateStr] = useState(() => {
@@ -40,12 +41,21 @@ function YeniDersForm() {
     const q = query(collection(db, "students"), orderBy("name", "asc"));
     const un = onSnapshot(
       q,
-      (s) =>
-        setStudents(s.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Student, "id">) }))),
+      (s) => {
+        const list = s.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Student, "id">) }));
+        setStudents(list);
+        if (ogrenciParam) {
+          const secili = list.find((x) => x.id === ogrenciParam);
+          if (secili) {
+            setStudentId(secili.id);
+            if (secili.fee) setFee(String(secili.fee));
+          }
+        }
+      },
       () => setErr("Öğrenci listesi okunamadı. Firestore kurallarını kontrol edin.")
     );
     return () => un();
-  }, [user]);
+  }, [user, ogrenciParam]);
 
   function handleStudentChange(id: string) {
     setStudentId(id);

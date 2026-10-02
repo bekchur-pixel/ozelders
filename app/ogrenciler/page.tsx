@@ -28,6 +28,7 @@ export default function OgrencilerPage() {
   const [busy, setBusy] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<Student | null>(null);
+  const [sadeceAktif, setSadeceAktif] = useState(true);
   const [err, setErr] = useState("");
 
   useEffect(() => {
@@ -140,20 +141,34 @@ export default function OgrencilerPage() {
       )}
 
       <div className="rounded-2xl bg-white p-4 shadow-sm">
-        <h2 className="font-bold">🎹 Öğrenciler ({list.length})</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="font-bold">🎹 Öğrenciler ({list.length})</h2>
+          <button
+            onClick={() => setSadeceAktif(!sadeceAktif)}
+            className={`rounded-full px-3 py-1.5 text-xs font-bold ${
+              sadeceAktif
+                ? "bg-rose-800 text-white"
+                : "bg-stone-100 text-stone-600"
+            }`}
+          >
+            {sadeceAktif ? "Aktif" : "Tümü"}
+          </button>
+        </div>
         {list.length === 0 ? (
           <p className="mt-2 text-sm text-stone-500">
             Henüz öğrenci yok. Yukarıdan ekleyin.
           </p>
         ) : (
           <ul className="mt-2 divide-y divide-stone-100">
-            {list.map((s) => {
+            {list
+              .filter((s) => !sadeceAktif || s.active !== false)
+              .map((s) => {
               const wa = whatsappLink(
                 s.phone,
                 `Merhaba ${s.parentName || ""}, ${s.name} için piyano ders programı hakkında yazıyorum 🎹`
               );
               return (
-                <li key={s.id} className="py-3">
+                <li key={s.id} className={`py-3 ${s.active === false ? "opacity-50" : ""}`}>
                   <div className="flex items-center gap-3">
                     <Link
                       href={`/ogrenciler/${s.id}`}
@@ -165,6 +180,7 @@ export default function OgrencilerPage() {
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-bold">{s.name}</p>
                         <p className="truncate text-xs text-stone-500">
+                          {s.active === false && <span className="font-bold text-stone-400">(pasif) </span>}
                           {s.parentName && `${s.parentName} • `}
                           {s.fee ? tl(s.fee) : "ücret yok"}
                           {s.note && ` • ${s.note}`}

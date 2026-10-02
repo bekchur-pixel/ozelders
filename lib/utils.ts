@@ -131,3 +131,13 @@ export function aydanOnce(ts: number) {
   const d = new Date(ts);
   return new Date(d.getFullYear(), d.getMonth() - 1, 1).getTime();
 }
+
+export function ayBaslangici(ts: number) {
+  const d = new Date(ts);
+  return new Date(d.getFullYear(), d.getMonth(), 1).getTime();
+}
+
+export function aySonu(ts: number) {
+  const d = new Date(ts);
+  return new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59, 999).getTime();
+}

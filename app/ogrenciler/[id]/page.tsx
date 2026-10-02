@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   collection,
   doc,
@@ -116,6 +117,12 @@ export default function OgrenciDetayPage() {
               {student.note && ` • ${student.note}`}
             </p>
           </div>
+          <Link
+            href={`/dersler/yeni?ogrenci=${student.id}`}
+            className="shrink-0 rounded-lg bg-rose-800 px-3 py-2 text-xs font-bold text-white"
+          >
+            + Ders Ekle
+          </Link>
           {wa && (
             <a
               href={wa}

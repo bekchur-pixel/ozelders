@@ -20,6 +20,8 @@ import {
   isToday,
   startOfToday,
   endOfWeek,
+  ayBaslangici,
+  aySonu,
   whatsappLink,
 } from "@/lib/utils";
 
@@ -63,6 +65,28 @@ export default function Home() {
     [lessons]
   );
   const unpaidTotal = unpaid.reduce((a, l) => a + (l.fee || 0), 0);
+
+  const [simdi, setSimdi] = useState(() => Date.now());
+  useEffect(() => {
+    const t = setInterval(() => setSimdi(Date.now()), 60000);
+    return () => clearInterval(t);
+  }, []);
+
+  const ayIcinde = useMemo(
+    () =>
+      lessons.filter(
+        (l) => l.date >= ayBaslangici(simdi) && l.date <= aySonu(simdi)
+      ),
+    [lessons, simdi]
+  );
+  const ayKazanc = useMemo(
+    () =>
+      ayIcinde
+        .filter((l) => l.status === "done" && l.paid)
+        .reduce((a, l) => a + (l.fee || 0), 0),
+    [ayIcinde]
+  );
+  const ayDersSayisi = ayIcinde.filter((l) => l.status === "done").length;
 
   async function togglePaid(l: Lesson) {
     await updateDoc(doc(db, "lessons", l.id), { paid: !l.paid });
@@ -221,6 +245,17 @@ export default function Home() {
             </li>
           ))}
         </ul>
+        <div className="mt-3 flex items-center justify-between rounded-xl bg-emerald-50 p-3">
+          <div>
+            <p className="text-xs font-bold text-emerald-800">
+              💰 Bu Ay Tahsilat
+            </p>
+            <p className="text-sm text-emerald-700">
+              {ayDersSayisi} ders • {tl(ayKazanc)}
+            </p>
+          </div>
+          <span className="text-lg">📈</span>
+        </div>
         <p className="mt-3 text-[11px] text-stone-400">
           {students.length} öğrenci kayıtlı •{" "}
           <button onClick={logout} className="underline">

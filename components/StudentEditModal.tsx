@@ -17,6 +17,7 @@ export function StudentEditModal({ student, onClose, onSaved }: Props) {
   const [phone, setPhone] = useState(student.phone || "");
   const [fee, setFee] = useState(String(student.fee || ""));
   const [note, setNote] = useState(student.note || "");
+  const [active, setActive] = useState(student.active !== false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
 
@@ -32,6 +33,7 @@ export function StudentEditModal({ student, onClose, onSaved }: Props) {
         phone: phone.trim(),
         fee: Number(fee) || 0,
         note: note.trim(),
+        active,
       });
       onSaved?.();
       onClose();
@@ -89,6 +91,17 @@ export function StudentEditModal({ student, onClose, onSaved }: Props) {
             onChange={(e) => setNote(e.target.value)}
           />
         </div>
+        <button
+          type="button"
+          onClick={() => setActive(!active)}
+          className={`w-full rounded-xl border py-2.5 text-sm font-bold ${
+            active
+              ? "border-emerald-300 bg-emerald-50 text-emerald-800"
+              : "border-stone-300 bg-stone-50 text-stone-500"
+          }`}
+        >
+          {active ? "✅ Aktif öğrenci" : "⏸ Pasif öğrenci (listede soluk görünür)"}
+        </button>
         {err && (
           <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700">⚠️ {err}</p>
         )}

@@ -91,6 +91,22 @@ function DerslerIcerik() {
     }
   }
 
+  async function cancelGroup(l: Lesson) {
+    if (!l.groupId) return;
+    const adet = lessons.filter((x) => x.groupId === l.groupId).length;
+    if (!confirm(`${l.studentName} için ${adet} tekrarlı dersin tamamı iptal edilsin mi?`))
+      return;
+    try {
+      await Promise.all(
+        lessons
+          .filter((x) => x.groupId === l.groupId && x.status !== "cancelled")
+          .map((x) => updateDoc(doc(db, "lessons", x.id), { status: "cancelled" }))
+      );
+    } catch (err: unknown) {
+      alert(`İptal edilemedi: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+
   if (!user) return null;
 
   const pill = (k: string, label: string) => (
@@ -202,6 +218,15 @@ function DerslerIcerik() {
                       className="rounded-lg bg-stone-100 px-3 py-2 text-xs text-stone-500"
                     >
                       İptal
+                    </button>
+                  )}
+                  {l.groupId && (
+                    <button
+                      onClick={() => cancelGroup(l)}
+                      className="rounded-lg bg-stone-100 px-3 py-2 text-xs text-stone-500"
+                      title="Tekrarlı programın tamamını iptal et"
+                    >
+                      ⏹ Tümü
                     </button>
                   )}
                 </div>
