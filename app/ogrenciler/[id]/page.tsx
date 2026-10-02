@@ -12,6 +12,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/components/AuthProvider";
+import { StudentEditModal } from "@/components/StudentEditModal";
 import type { Lesson, Student } from "@/lib/types";
 import {
   tl,
@@ -28,6 +29,7 @@ export default function OgrenciDetayPage() {
   const id = params?.id ?? "";
   const [student, setStudent] = useState<Student | null>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [editing, setEditing] = useState(false);
   const [err, setErr] = useState("");
 
   useEffect(() => {
@@ -123,6 +125,13 @@ export default function OgrenciDetayPage() {
               WA
             </a>
           )}
+          <button
+            onClick={() => setEditing(true)}
+            className="shrink-0 rounded-lg bg-sky-100 px-2.5 py-2 text-xs font-bold text-sky-900"
+            title="Düzenle"
+          >
+            ✏️
+          </button>
         </div>
       </div>
 
@@ -262,6 +271,10 @@ export default function OgrenciDetayPage() {
           </ul>
         )}
       </div>
+
+      {editing && student && (
+        <StudentEditModal student={student} onClose={() => setEditing(false)} />
+      )}
     </div>
   );
 }

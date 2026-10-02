@@ -13,6 +13,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/components/AuthProvider";
+import { StudentEditModal } from "@/components/StudentEditModal";
 import type { Student } from "@/lib/types";
 import { tl, whatsappLink } from "@/lib/utils";
 
@@ -26,6 +27,7 @@ export default function OgrencilerPage() {
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [editing, setEditing] = useState<Student | null>(null);
   const [err, setErr] = useState("");
 
   useEffect(() => {
@@ -179,7 +181,17 @@ export default function OgrencilerPage() {
                       </a>
                     )}
                     <button
-                      onClick={() => deleteDoc(doc(db, "students", s.id))}
+                      onClick={() => setEditing(s)}
+                      className="shrink-0 rounded-lg bg-sky-100 px-2.5 py-2 text-xs font-bold text-sky-900"
+                      title="Düzenle"
+                    >
+                      ✏️
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (confirm(`${s.name} silinsin mi?`))
+                          deleteDoc(doc(db, "students", s.id));
+                      }}
                       className="shrink-0 rounded-lg bg-stone-100 px-2.5 py-2 text-xs text-stone-500"
                       title="Sil"
                     >
@@ -192,6 +204,13 @@ export default function OgrencilerPage() {
           </ul>
         )}
       </div>
+
+      {editing && (
+        <StudentEditModal
+          student={editing}
+          onClose={() => setEditing(null)}
+        />
+      )}
     </div>
   );
 }
